@@ -1,7 +1,7 @@
-# Scientific-Calc-avr
+# Scientific-Calc-avr (discontinued project)
 Scientific calc project using Atmega328p
 
-This project is running such possible as I can. (discontinued project)
+This project is running such possible as I can. 
 The ideas to implement:
 * Basic scientific executions
 * Lagrange Interpolation
