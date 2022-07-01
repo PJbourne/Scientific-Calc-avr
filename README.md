@@ -7,7 +7,7 @@ The ideas to implement:
 * Reverse Polonese Notation mode (implemented)
 * Basic scientific calculations (implemented)
 * Lagrange Interpolation (under implementation)
-* Store on send data to external device (under implementation)
+* To store or send/receive data to/from external device (under implementation)
 * Equations expression solver (maybe will not be possible)
 * Plot graphics into .txt file in SD card (possible but little hard to implement)
 
