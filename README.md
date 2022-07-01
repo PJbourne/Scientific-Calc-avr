@@ -1,4 +1,4 @@
-# Scientific-Calc-avr (discontinued project)
+# Scientific-Calculator
 Scientific calculator project using Atmega328p
 
 This project is running such possible as I can. 
