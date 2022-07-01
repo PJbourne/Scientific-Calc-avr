@@ -4,7 +4,7 @@ Scientific calculator project using Atmega328p
 This project is running such possible as I can. 
 The ideas to implement:
 * Keyboard (implemented)
-* Reverse Polonese Notation mode (implemented)
+* Reverse Polonese Notation mode (implemented) [https://en.wikipedia.org/wiki/Reverse_Polish_notation or https://pt.wikipedia.org/wiki/Nota%C3%A7%C3%A3o_polonesa_inversa]
 * Basic scientific calculations (implemented)
 * Lagrange Interpolation (under implementation)
 * To store or send/receive data to/from external device (under implementation)
