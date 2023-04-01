@@ -23,7 +23,9 @@ Also it's able to solver Linear systens discribed as Matrix with variable order 
 The values can be showed in fix, scientific and engeenering notation.
 
 Now I am developing Complex Numbers Matrix Solver in parallel to methods to achive complex roots from given equations (from family version 4. and 5.).
-![imagem2](https://github.com/PJbourne/Scientific-Calc-avr/blob/main/WhatsApp%20Image%202023-04-01%20at%2012.48.39.jpeg)
+
+![imagem3](https://github.com/PJbourne/Scientific-Calc-avr/blob/main/WhatsApp%20Image%202023-04-01%20at%2012.49.19.jpeg)
+![imagem4](https://github.com/PJbourne/Scientific-Calc-avr/blob/main/WhatsApp%20Image%202023-04-01%20at%2012.48.39.jpeg)
 
 
 Bellow, is following the last version, yet in breadboard.
