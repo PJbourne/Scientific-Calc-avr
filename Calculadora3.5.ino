@@ -1,8 +1,8 @@
 /*
    Autor: Pablo T. Monteiro
-   Versão 3.1.0
-   Data inicio: 22/06/2022 - 14h:41min
-   Data fim:    02/03/2023 - 23:45min
+   Versão 3.5.1
+   Data inicio: 08/04/2023 - 09h:41min
+   Data fim:    08/04/2023 - 23:45min
    CACULADORA CIENTIFICA RPN
 */
 
@@ -10,7 +10,7 @@
 #include <math.h>
 #include <string.h>
 
-#define MAX_BUFFER_SIZE 15
+#define MAX_BUFFER_SIZE 20
 #define  col_0   9                   //coluna 1 controlada pelo pino digital 09 (será usado como digital)
 #define  col_1   10                   //coluna 2 controlada pelo pino digital 10 (será usado como digital)
 #define  col_2   11                   //coluna 3 controlada pelo pino digital 11 (será usado como digital)
@@ -37,7 +37,7 @@ ISR(TIMER2_OVF_vect) {
       digitalWrite(col_3, LOW);
       digitalWrite(col_4, LOW);
       digitalWrite(col_0, HIGH);
-      delay(1);
+      delay(10);
       if (!digitalRead(row_A)&digitalRead(row_B)&digitalRead(row_C) & !digitalRead(row_D)) keyboard(0x41); //1,8 'A'
       else if (!digitalRead(row_A) & !digitalRead(row_B)&digitalRead(row_C) & !digitalRead(row_D)) keyboard(0x46); //1,7 'F'
       else if (!digitalRead(row_A) & !digitalRead(row_B)&digitalRead(row_C)&digitalRead(row_D)) keyboard(0x4B); //1,6 'K'
@@ -53,7 +53,7 @@ ISR(TIMER2_OVF_vect) {
       digitalWrite(col_3, LOW);
       digitalWrite(col_4, LOW);
       digitalWrite(col_1, HIGH);
-      delay(1);
+      delay(10);
       if (!digitalRead(row_A)&digitalRead(row_B)&digitalRead(row_C) & !digitalRead(row_D))  keyboard(0x42); //2,8
       else if (!digitalRead(row_A) & !digitalRead(row_B)&digitalRead(row_C) & !digitalRead(row_D))  keyboard(0x47); //2,7
       else if (!digitalRead(row_A) & !digitalRead(row_B)&digitalRead(row_C)&digitalRead(row_D))  keyboard(0x4C); //2,6
@@ -69,7 +69,7 @@ ISR(TIMER2_OVF_vect) {
       digitalWrite(col_3, LOW);
       digitalWrite(col_4, LOW);
       digitalWrite(col_2, HIGH);
-      delay(1);
+      delay(10);
       if (!digitalRead(row_A)&digitalRead(row_B)&digitalRead(row_C) & !digitalRead(row_D))  keyboard(0x43); //3,8
       else if (!digitalRead(row_A) & !digitalRead(row_B)&digitalRead(row_C) & !digitalRead(row_D))  keyboard(0x48); //3,7
       else if (!digitalRead(row_A) & !digitalRead(row_B)&digitalRead(row_C)&digitalRead(row_D))  keyboard(0x4D); //3,6
@@ -85,7 +85,7 @@ ISR(TIMER2_OVF_vect) {
       digitalWrite(col_2, LOW);
       digitalWrite(col_4, LOW);
       digitalWrite(col_3, HIGH);
-      delay(1);
+      delay(10);
       if (!digitalRead(row_A)&digitalRead(row_B)&digitalRead(row_C) & !digitalRead(row_D))  keyboard(0x44); //4,8
       else if (!digitalRead(row_A) & !digitalRead(row_B)&digitalRead(row_C) & !digitalRead(row_D))  keyboard(0x49); //4,7
       else if (!digitalRead(row_A) & !digitalRead(row_B)&digitalRead(row_C)&digitalRead(row_D))  keyboard(0x4E); //4,6
@@ -101,7 +101,7 @@ ISR(TIMER2_OVF_vect) {
       digitalWrite(col_2, LOW);
       digitalWrite(col_3, LOW);
       digitalWrite(col_4, HIGH);
-      delay(1);
+      delay(10);
       if (!digitalRead(row_A)&digitalRead(row_B)&digitalRead(row_C) & !digitalRead(row_D))  keyboard(0x45); //5,8
       else if (!digitalRead(row_A) & !digitalRead(row_B)&digitalRead(row_C) & !digitalRead(row_D))  keyboard(0x4A); //5,7
       else if (!digitalRead(row_A) & !digitalRead(row_B)&digitalRead(row_C)&digitalRead(row_D))  keyboard(0x4F); //5,6
@@ -122,7 +122,7 @@ void setup() {
   lcd.setCursor(0, 0);
   lcd.cursor();
   lcd.blink();
-  lcd.print("RPN Calculator");
+  lcd.print("RPN Calc v3.5.1");
   pinMode(col_0, OUTPUT);
   pinMode(col_1, OUTPUT);
   pinMode(col_2, OUTPUT);
@@ -196,11 +196,11 @@ void keyboard(char c) {
   }else if (c == 0x62) {
     SHIFT = !SHIFT;
     if (SHIFT) {
-      lcd.setCursor(0, 1);
-      lcd.print("shift");
+      lcd.setCursor(9, 1);
+      lcd.print(" shift ");
     } else {
-      lcd.setCursor(0, 1);
-      lcd.print("     ");
+      lcd.setCursor(9, 1);
+      lcd.print("       ");
     }
   }else if(c == 0x4C){
     lastMODE = MODE_type;
@@ -220,11 +220,6 @@ void keyboard(char c) {
     lcd.print(mod[(int)MODE_type]);
     lcd.print(" P:");
     lcd.print(pola[(int)polar]);
-  }else if (c == 0x49){
-    if(SHIFT){
-      polar = !polar;
-      lcd.setCursor(0,0);
-    }
   }else if(c == 0x64){
     if(!SHIFT){    
       MODE_type = 0x01;
@@ -255,14 +250,15 @@ void keyboard(char c) {
       type_number(c);
       SHIFT = false;
     } else if (c == 0x61) {        
-      complexo = 0;
+      complexo = 0x00;
+      refresh(c);
     } else if (c == 0x50) {                                          //[ENTER]
       store_number(c);
     } else if ((c > 0x41 && c < 0x53) || (c > 0x29 && c < 0x2E) || c == 0x2F) { //c[B_O+-*/] || c == 0x52
       operate_number(c);
       clear_key();
-      refresh(c);
       SHIFT = false;
+      refresh(c);
     }
   } else if (MODE_type == 0x02) { //Linear
     if((c > 0x2F && c < 0x3A) || c == 0x2E || c == 0x65 || c == 0x54 || c == 0x53) {
@@ -567,10 +563,11 @@ void operate_number(char c) {
     }
   } else if (c == 0x2F) { // char '/' to do: div
     if(SHIFT){
-      double Re  =  Num[2] * Num[0] + ( -1 * Num[3] * Num[1]);
-      double Im  =  Num[2] * (-1 * Num[1] ) + Num[0] + Num[3];
-      Num[1] = Re / pow(Num[0], 2);
-      Num[2] = Im / pow(Num[1], 2);
+      double Re  =  Num[2] * Num[0] + (Num[3] * Num[1]);
+      double Im  =  Num[0] * (Num[3]) + Num[2] * ( -1 * Num[1]);
+      double a = Num[1];
+      Num[1] = Re / ( pow(Num[0], 2) + pow(a, 2) );
+      Num[2] = Im / ( pow(Num[0], 2) + pow(a, 2) );
       complexo = 0x01;
     }else{
       Num[1] = Num[1] / Num[0];
@@ -595,21 +592,21 @@ void operate_number(char c) {
   }else{
     if (c == 0x4A) {
       if(SHIFT){
-        lcd.setCursor(0,1);
         if(tri == 0x01){
             Num[1] = ((Num[1]*PI)/180);
         }else if(tri == 0x02){
             Num[1] = ((Num[1]*PI)/200);
         }
         if(polar){
-          lcd.print("To Rectangular");
+          lcd.setCursor(0,1);
+          lcd.print("To Rectangular  ");
           delay(400);
           polar = false;
           double a = Num[0] * cos(Num[1]);
           Num[1] = Num[0] * sin(Num[1]);
           Num[0] = a;
         }else{
-          lcd.print("To Polar");
+          lcd.print("To Polar        ");
           delay(400);
           polar = true;
           double a = sqrt(Num[0]*Num[0] + Num[1]*Num[1]);
@@ -663,62 +660,10 @@ void operate_number(char c) {
     } else if (c == 0x47) {
       Num[0] = sqrt(Num[0]);//sqrt(x)
       return;
-    } else if (c == 0x4B) {       //==========================Algum solver
+    } else if (c == 0x4B) {
       if(SHIFT){
-        double p, q, r, x1, x2, x3, x4, imag1, imag2, imag3, imag4;
-        double A, B, C, D;
-        double theta, cosTheta, sinTheta;
-        double phi, cosPhi, sinPhi;
-
-        double a = Num[0], b = Num[1], c = Num[2], d = Num[3], e = Num[4]; 
-        // Compute coefficients
-        p = (8*a*c - 3*b*b)/(8*a*a);
-        q = (b*b*b - 4*a*b*c + 8*a*a*d)/(8*a*a*a);
-        r = (-3*b*b*b*b + 256*a*a*a*e - 64*a*b*d + 16*b*b*c)/(256*a*a*a*a);
-    
-        // Compute discriminant
-        A = 2*q*q*q - 9*p*q*r + 27*p*p*(8*e*a - 3*d*b + 12*c*a*a)/(8*a*a*a);
-        B = sqrt(A*A - 4*(4*q*q - 12*p*r - 3*p*p*A/(8*a*a))/(3*p));
-        C = pow((A + B)/2, 1/3.0);
-        D = pow((A - B)/2, 1/3.0);
-    
-        // Compute roots
-        x1 = (-b - 2*C - 2*D)/(4*a);
-        x2 = (-b + C + D)/(4*a);
-        x3 = (-b + C + D)/(4*a);
-        x4 = (-b - 2*C - 2*D)/(4*a);
-    
-        // Compute complex parts
-        if (B == 0) {
-            Num[0] = x1;
-            Num[1] = x2;
-            Num[2] = x3;
-            Num[3] = x4;
-            complexo = 0x00;
-            return;
-        } else {
-            theta = atan(sqrt(3*p)/A);
-            cosTheta = cos(theta/3);
-            sinTheta = sin(theta/3);
-            phi = atan(sqrt(abs(2*A)/sqrt(4*A*A + (A*B/p)*(A*B/p))));
-            cosPhi = cos(phi/3);
-            sinPhi = sin(phi/3);
-            imag1 = -2*sqrt(p)/3*(cosTheta + cos(2*PI/3)*sinTheta)*cosPhi - b/(4*a);
-            imag2 = -2*sqrt(p)/3*(cosTheta + cos(2*PI/3)*sinTheta)*sinPhi - b/(4*a);
-            imag3 = -2*sqrt(p)/3*(cosTheta + cos(2*PI/3)*sinTheta)*cosPhi - b/(4*a);
-            imag4 = -2*sqrt(p)/3*(cosTheta + cos(2*PI/3)*sinTheta)*sinPhi - b/(4*a);
-        }
-        Num[0] = x1;
-        Num[2] = imag1;
-        Num[3] = x2;
-        Num[4] = imag2;
-        Num[5] = x3;
-        Num[6] = imag3;
-        Num[7] = x4;
-        Num[8] = imag4;
-        complexo = 0x03;
       }else{
-        complexo = 0x00;
+        polar = !polar;
       }
       return;
     } else if (c == 0x4D) {       //SIN
@@ -889,51 +834,92 @@ void rollthrough(){
 //=============================================================roll through
 //=============================================================refresh
 void refresh(char c) {
-  int i = 3;
-  while(i > 1){
-  if((c > 0x41 && c < 0x4A) ||(c > 0x4A && c < 0x53) || c==0x50 || (c > 0x29 && c < 0x2E) || c == 0x2F){// || c == 0x52
+  int i;
+  //--------------------------------------------------------------------------------while(i > 1){
+  if((c > 0x41 && c < 0x46) ||(c > 0x46 && c < 0x4A) ||(c > 0x4B && c < 0x51) || (c > 0x29 && c < 0x2E) || (c > 0x2E && c < 0x30)){
     lcd.clear();
     lcd.setCursor(0,1);
-    if(i==2){
-      lcd.setCursor(0,0);
-    }
+    lcd.noCursor();
+    i = 8;
   }else{
     lcd.setCursor(0,0);
-    i--;
+    lcd.cursor();
+    i = 9;
   }
-  c=0x00;
   if(notation == 0x00){
-    lcd.print(Num[0], 15);
+    lcd.print(Num[0], i);
+    if(c==0x50){
+      lcd.setCursor(0,0);
+      lcd.print(Num[0], i);
+    }
   }else if(notation == 0x01){
-    int exponent = floor(log10(Num[0])); // Determine the exponent
+    //int exponent = floor(log10(Num[0])); // Determine the exponent
+    //exponent -= (exponent%3);
+    //double value = Num[0]*pow(10, exponent * -1);
+
+    int exponent = floor(log10(abs(Num[0]))); // Determine the exponent
     exponent -= (exponent%3);
     double value = Num[0]*pow(10, exponent * -1);
-    lcd.print(value,6);
+    if(exponent < 0) {
+        value *= pow(10, -3*(exponent/3));
+        exponent -= (exponent%3);
+    }
+
+    lcd.print(value,5);
     lcd.print("E");
     lcd.print(exponent);
+    if(c==0x50){
+      lcd.setCursor(0,0);
+      lcd.print(value,5);
+      lcd.print("E");
+      lcd.print(exponent);
+    }
   }else if(notation == 0x02){ // To print in Scientific Notation
     int exponent = floor(log10(Num[0])); // Determine the exponent
     double value = Num[0]*pow(10, exponent * -1);
-    lcd.print(value,7);
+    lcd.print(value,5);
     lcd.print("E");
     lcd.print(exponent);
+    if(c==0x50){
+      lcd.setCursor(0,0);
+      lcd.print(value,5);
+      lcd.print("E");
+      lcd.print(exponent);
+    }
     //clear_key();
   }
   if(c == 0x53 && SHIFT == true){
     lcd.setCursor(0,0);
-    lcd.print(lastX,15);
+    lcd.print(lastX,11);
   }
-  i--;
-  }
+  //--------------------------------------------------------------------------------}
   if(complexo != 0x00){
-    lcd.setCursor(1,13);
+     lcd.setCursor(12,1);
     if(complexo == 0x01){
-      lcd.print("2 complexo");
+      lcd.print("2cpl");
     }else if(complexo == 0x02){
-      lcd.print("3 complexo");
+      lcd.print("3cpl");
     }else if(complexo == 0x03){
-      lcd.print("4 complexo");
+      lcd.print("4cpl");
     }
+  }else{
+    lcd.setCursor(12,1);
+    lcd.print("    ");
+  }
+  lcd.setCursor(12,0);
+  if(tri == 0x00){
+    lcd.print(" rad");
+  }else if(tri == 0x01){
+    lcd.print(" deg");
+  }else{
+    lcd.print(" grd");
+  }
+  if(polar){
+    lcd.setCursor(9,1);
+    lcd.print("pol");
+  }else{
+    lcd.setCursor(9,1);
+    lcd.print("ret");
   }
 }
 //=============================================================refresh
